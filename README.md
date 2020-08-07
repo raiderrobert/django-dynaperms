@@ -1,4 +1,4 @@
-# Django Dynaperm
+# Django Dynaperms
 
 Django's [permissions](https://docs.djangoproject.com/en/3.0/topics/auth/default/#permissions-and-authorization) are very useful,
 but sometimes authorizations to certain system features can rapidly change based on different needs or need a way to allow
