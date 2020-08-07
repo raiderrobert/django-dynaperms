@@ -1,5 +1,6 @@
 from typing import Iterable
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.module_loading import import_string
 
 
@@ -22,7 +23,11 @@ def get_dynamic_perms():
     Return a dictionary where each key has a list of functions
     """
     perms = {}
-    for perm in get_all_dynamic_perm_names():
-        perms[perm] = [import_string(func_path) for func_path in get_funcs_for_dynamic_perm_name(perm)]
+
+    try:
+        for perm in get_all_dynamic_perm_names():
+            perms[perm] = [import_string(func_path) for func_path in get_funcs_for_dynamic_perm_name(perm)]
+    except ImportError as e:
+        raise ImproperlyConfigured(e)
 
     return perms

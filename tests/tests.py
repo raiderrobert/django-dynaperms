@@ -1,3 +1,4 @@
+from django.core.exceptions import ImproperlyConfigured
 from django.test.utils import override_settings
 from django.contrib.auth import get_user_model
 
@@ -55,7 +56,6 @@ def test_user_has_perm_true(user):
 
     assert get_dynamic_perms()[PERM_NAME]
 
-
     user.is_active = False
     user.save()
     assert user.has_perm(PERM_NAME) is False
@@ -82,3 +82,13 @@ def test_multiple_dynamic_checks_none_return_true(user):
 })
 def test_multiple_dynamic_checks_at_least_one_returns_true(user):
     assert user.has_perm(PERM_NAME) is True
+
+
+@override_settings(DYNAMIC_PERMISSIONS={
+    PERM_NAME: [
+        'tests.tests.not_here'
+    ]
+})
+def test_multiple_dynamic_checks_at_least_one_returns_true(user):
+    with pytest.raises(ImproperlyConfigured):
+        user.has_perm(PERM_NAME)
